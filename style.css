@@ -1,0 +1,412 @@
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: skyblue;
+  perspective: 850px;
+  height: 100%;
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+}
+
+/***** SKY & LIGHT ****/
+
+.sky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+  background-size: 100vw 500vh;
+  background-image: linear-gradient(to top, #90dffe 20%, #b7490f 45%, #845d80 60%, #000040 75%);
+  will-change: background-position;
+  animation: sky 20.1s linear 20s both;
+  /*	animation: sky 20s linear 0s both;*/
+}
+@keyframes sky {
+  100% {
+    background-position: 0 500vh;
+  }
+  0% {
+    background-position: 0 100vh;
+  }
+}
+/* darken 0s linear 20s both*/
+/* darken 0s linear 00s both*/
+
+/***** VIEW ****/
+
+.view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  transform: none;
+  transform-style: preserve-3d;
+  will-change: transform;
+  animation: flatStart 2s ease-out 0s forwards, viewStart 5s linear 2s forwards, viewEnd 5s ease-in-out 7s forwards;
+}
+
+@keyframes flatStart {
+  0% {
+    transform: scale(10) rotateX(0deg) translateY(0px) translateZ(0px);
+    height: 100px;
+    top: 50%;
+  }
+  50% {
+    transform: scale(4) rotateX(0deg) translateY(0px) translateZ(0px);
+    height: 300px;
+    top: 50%;
+  }
+  100% {
+    transform: scale(4) rotateX(0deg) translateY(0px) translateZ(0px);
+    height: 500px;
+    top: 50%;
+  }
+}
+
+@keyframes viewStart {
+  0% {
+    transform: scale(4) rotateX(0deg) translateY(0px) translateZ(0px);
+  }
+  50% {
+    transform: scale(4.5) rotateX(30deg) translateY(100px) translateZ(-100px);
+  }
+  100% {
+    transform: scale(3.5) rotateX(85deg) translateY(200px) translateZ(-250px);
+  }
+}
+
+@keyframes viewEnd {
+  0% {
+    transform: scale(3.5) rotateX(85deg) rotateZ(0deg) translateX(0px) translateY(200px) translateZ(-250px);
+  }
+
+  50% {
+    transform: scale(5) translateZ(-300px) rotateZ(110deg) translateY(-100px) translateZ(-350px);
+  }
+  100% {
+    transform: scale(3) translateY(-200px) rotateX(100deg) rotateZ(90deg) translateY(-90px) translateZ(-350px);
+  }
+
+  /*	100%	{transform: scale(2.5) rotateX(120deg) rotateZ(180deg) translateX(0px) translateY(0px) translateZ(-250px);}*/
+}
+
+/***** PLANE ****/
+
+.plane {
+  position: absolute;
+  top: 70%;
+  margin-top: -48px;
+  left: 50%;
+  margin-left: -48px;
+  z-index: 9;
+  width: 96px;
+  height: 64px;
+  transform-style: preserve-3d;
+  will-change: transform;
+  animation: updown 10s ease-in-out 0s infinite alternate, landing 5s ease-in-out;
+}
+
+@keyframes updown {
+  0% {
+    transform: translateZ(350px) rotateZ(-90deg) rotateY(0deg);
+    animation-timing-function: ease-in-out;
+  }
+  20% {
+    transform: translateZ(352px) rotateZ(-90deg) rotateX(-3deg) rotateY(-10deg);
+    transition-timing-function: ease-in-out;
+  }
+  60% {
+    transform: translateZ(340px) rotateZ(-90deg) rotateX(-5deg) rotateY(-2deg);
+    transition-timing-function: ease-in-out;
+  }
+  80% {
+    transform: translateZ(355px) rotateZ(-90deg) rotateX(-1deg) rotateY(5deg);
+    transition-timing-function: ease-in-out;
+  }
+  100% {
+    transform: translateZ(362px) rotateZ(-90deg) rotateX(1deg) rotateY(-3deg);
+    transition-timing-function: ease-in-out;
+  }
+}
+
+.side {
+  position: absolute;
+  width: 48px;
+  height: 64px;
+  /*	background: rgba(255,200,255,.1);*/
+  transform-style: preserve-3d;
+}
+.side.sL {
+  left: 0;
+  /*	transform: rotateY(70deg);*/
+  transform-origin: 100% 0;
+  animation: sideL 1s ease-in-out 4s both;
+}
+@keyframes sideL {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(70deg);
+  }
+}
+.side.sR {
+  right: 0;
+  /*	transform: rotateY(-70deg);*/
+  transform-origin: 0% 0;
+  animation: sideR 1s ease-in-out 3s both;
+}
+@keyframes sideR {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(-70deg);
+  }
+}
+
+.side .fuselage {
+  background: #f5f5f5;
+  width: 16px;
+  height: 48px;
+  position: absolute;
+  transform-style: preserve-3d;
+}
+.side.sL .fuselage {
+  right: 0;
+  bottom: 0;
+}
+.side.sR .fuselage {
+  left: 0;
+  bottom: 0;
+}
+
+.side .fuselage:after,
+.side .wing:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  top: -16px;
+}
+.side.sL .fuselage:after {
+  border-width: 16px 16px 0 0;
+  border-color: transparent #f5f5f5 transparent transparent;
+}
+.side.sR .fuselage:after {
+  border-width: 16px 0 0 16px;
+  border-color: transparent transparent transparent #f5f5f5;
+}
+
+.side .wing {
+  position: absolute;
+  width: 32px;
+  height: 16px;
+  background: white;
+  transform-style: preserve-3d;
+}
+.side.sL .wing {
+  left: 0;
+  bottom: 0;
+  /*	transform: rotateY(-70deg);*/
+  transform-origin: right;
+  animation: wingL 1s ease-in-out 5s both;
+}
+@keyframes wingL {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(-80deg);
+  }
+}
+.side.sR .wing {
+  right: 0;
+  bottom: 0;
+  /*	transform: rotateY(70deg);*/
+  transform-origin: left;
+  animation: wingR 1s ease-in-out 6s both;
+}
+@keyframes wingR {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(80deg);
+  }
+}
+
+.side.sL .wing:after {
+  top: -32px;
+  border-width: 32px 32px 0 0;
+  border-color: transparent white transparent transparent;
+}
+.side.sR .wing:after {
+  top: -32px;
+  border-width: 32px 0 0 32px;
+  border-color: transparent transparent transparent white;
+}
+
+.side .flap {
+  position: absolute;
+  height: 48px;
+  width: 48px;
+  transform-style: preserve-3d;
+}
+.side.sL .flap {
+  top: 0;
+  left: 0;
+  /*	transform: rotate3d(1, -1, 0, 175deg);*/
+  transform-origin: 50% 50%;
+  animation: flapL 1s ease-in-out 1s both;
+}
+@keyframes flapL {
+  0% {
+    transform: rotate3d(-1, 1, 0, 0deg);
+  }
+  100% {
+    transform: rotate3d(-1, 1, 0, 177deg);
+  }
+}
+.side.sR .flap {
+  top: 0;
+  right: 0;
+  /*	transform: rotate3d(-1, -1, 0, -175deg);*/
+  transform-origin: 50% 50%;
+  animation: flapR 1s ease-in-out 1.5s both;
+}
+@keyframes flapR {
+  0% {
+    transform: rotate3d(1, 1, 0, 0deg);
+  }
+  100% {
+    transform: rotate3d(1, 1, 0, -177deg);
+  }
+}
+
+.side .wingFlap {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  top: 16px;
+  box-shadow: none;
+  transform-style: preserve-3d;
+}
+.side.sL .wingFlap {
+  border-width: 32px 32px 0 0;
+  border-color: #f9f9f9 transparent transparent transparent;
+  transform-origin: 100% 0;
+  /*	transform: rotateX(70deg); */
+  animation: wingFlaps 1s ease-in-out 5s both;
+}
+.side.sR .wingFlap {
+  right: 0px;
+  border-width: 0 32px 32px 0;
+  border-color: transparent #f9f9f9 transparent transparent;
+  transform-origin: 100% 0;
+  /*	transform: rotateX(70deg); */
+  animation: wingFlaps 1s ease-in-out 6s both;
+}
+@keyframes wingFlaps {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(77deg);
+  }
+}
+
+.side .fuseFlap {
+  background: #eee;
+  height: 16px;
+  width: 32px;
+  position: absolute;
+  top: 0;
+  transform-style: preserve-3d;
+}
+.side.sL .fuseFlap {
+  left: 0;
+}
+.side.sR .fuseFlap {
+  right: 0;
+}
+
+.side .fuseFlap:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+.side.sL .fuseFlap:after {
+  right: -16px;
+  border-width: 0 0 16px 16px;
+  border-color: transparent transparent transparent #eee;
+}
+.side.sR .fuseFlap:after {
+  left: -16px;
+  border-width: 16px 0 0 16px;
+  border-color: #eee transparent transparent transparent;
+}
+
+/***** PLAY/PAUSE ****/
+
+input[type="checkbox"].pauseCheck {
+  position: fixed;
+  top: -100px;
+}
+
+.pause {
+  display: block;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border: 4px solid silver;
+  text-align: center;
+  line-height: 35px;
+}
+.pause span {
+  display: inline-block;
+  border-left: 4px solid silver;
+  border-right: 4px solid silver;
+  width: 5px;
+  height: 15px;
+  will-change: border, height, padding;
+  transition: border-left 0.3s, border-right 0.3s;
+}
+.pauseCheck:checked + .view + .sky + .pause span {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 0 8px 12px;
+  border-color: transparent transparent transparent silver;
+  will-change: border, height, padding;
+  transition: border-left 0.3s, border-right 0.3s;
+}
+
+.pauseCheck:checked + .view *,
+.pauseCheck:checked + .view *:after,
+.pauseCheck:checked + .view,
+.pauseCheck:checked + .view + .sky {
+  animation-play-state: paused !important;
+}
+
+#animContainer.paused *,
+#animContainer.paused *::after,
+#animContainer.paused {
+  animation-play-state: paused !important;
+}
